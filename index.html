@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survivor.BR - ELITE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #282c34;
+            color: #fff;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .intro {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .intro p {
+            font-size: 1.2em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .medalhas {
+            font-weight: bold;
+            background-color: #ffd700;
+        }
+        .jogador-verificado {
+            color: green;
+            font-weight: bold;
+        }
+        .jogador-nao-verificado {
+            color: red;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #282c34;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Clã Survivor.BR</h1>
+        <p>Bem-vindo à página oficial do clã Survivor.BR</p>
+    </header>
+
+    <section>
+        <table id="planilha">
+            <thead>
+                <tr>
+                    <!-- Os cabeçalhos serão gerados dinamicamente -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os dados da planilha serão inseridos aqui -->
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        <p>© 2024 Clã Exped. ELITE - Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const sheetID = '11QvGqZ3OOH0LrCXIcWS2TkSUp7fXays8';
+        const sheetNumber = '1'; // Número da aba, você pode ajustar conforme necessário
+		
+        fetch(`https://spreadsheets.google.com/feeds/cells/${sheetID}/${sheetNumber}/public/full?alt=json`)
+            .then(response => response.json())
+            .then(data => {
+                const entries = data.feed.entry;
+                const tableHead = document.querySelector('#planilha thead tr');
+                const tableBody = document.querySelector('#planilha tbody');
+                
+                let currentRow = 0;
+                let row;
+
+                entries.forEach((entry, index) => {
+                    const cell = entry.gs$cell;
+                    
+                    // Cria nova linha se necessário
+                    if (cell.row != currentRow) {
+                        currentRow = cell.row;
+                        row = document.createElement('tr');
+                        tableBody.appendChild(row);
+                    }
+
+                    const cellElement = document.createElement(cell.row == 1 ? 'th' : 'td');
+                    cellElement.textContent = cell.$t;
+
+                    if (cell.row == 1) {
+                        tableHead.appendChild(cellElement);
+                    } else {
+                        row.appendChild(cellElement);
+                    }
+                });
+            });
+    </script>
+</body>
+</html>
